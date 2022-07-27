@@ -9,10 +9,10 @@ server:
 
 spring:
   datasource:
-      url: jdbc:mariadb://localhost:3306/test
+      url: jdbc:mariadb://localhost:3306/greendb
       driver-class-name: org.mariadb.jdbc.Driver
-      username: root
-      password: 1234
+      username: green
+      password: green1234
 
   jpa:
     open-in-view: true
@@ -21,6 +21,16 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
-  
+    properties:
+      hibernate.format_sql: true
+
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    '[org.springframework.web]': DEBUG
+    '[org.hibernate]': DEBUG
 
 
