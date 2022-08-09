@@ -56,7 +56,7 @@ public class BoardService {
     }
 
     @Transactional
-    public Board delete(Integer id, Board board) {
+    public Board delete(Board board) {
         Optional<Board> boardOp = boardRepository.checkPassword(board);
         if (boardOp.isPresent()) {
             Board boardEntity = boardOp.get();
@@ -65,7 +65,7 @@ public class BoardService {
             System.out.println("============================");
             return boardEntity;
         }
-        boardRepository.deleteById(id);
+        boardRepository.delete(board);
         return board;
     }
 }

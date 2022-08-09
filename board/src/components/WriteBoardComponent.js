@@ -52,26 +52,27 @@ class WriteBoardComponent extends Component {
     };
     if (board.title === null || board.title === "") {
       return alert("title를 입력해주세요");
-    } else {
-      if (board.content === null || board.content === "") {
-        return alert("content를 입력해주세요");
-      } else {
-        if (board.username === null || board.username === "") {
-          return alert("username을 입력해주세요");
-        } else {
-          if (board.password === null || board.password === "") {
-            return alert("비밀번호를 입력해주세요");
-          }
-        }
-      }
-    };
-    if (this.setState.id === 'create') {
-      console.log("board =>" + JSON.stringify(board));
+    }
+
+    if (board.content === null || board.content === "") {
+      return alert("content를 입력해주세요");
+    }
+
+    if (board.username === null || board.username === "") {
+      return alert("username을 입력해주세요");
+    }
+
+    if (board.password === null || board.password === "") {
+      return alert("비밀번호를 입력해주세요");
+    }
+    console.log("board this.state.id=>" + this.state.id);
+    if (this.state.id === 'create') {
+      console.log("board write=>" + JSON.stringify(board));
       BoardService.writeBoard(board).then(res => {
         window.location.href = "/api/board";
       });
     } else {
-      console.log("board =>" + JSON.stringify(board));
+      console.log("board update=>" + JSON.stringify(board));
       BoardService.updateBoard(this.state.id, board).then(res => {
         window.location.href = "/api/board";
       });

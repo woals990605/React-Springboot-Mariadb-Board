@@ -45,8 +45,17 @@ class DetailBoardComponent extends Component {
 
     deleteBoard = async function () {
         if (window.confirm("글을 삭제하시겠습니까?")) {
-            if (window.prompt("비밀번호를 입력해주세요.")) {
-                BoardService.deleteBoard(this.state.id).then(res => {
+            let password = window.prompt("비밀번호를 입력해주세요.");
+            if (password !== "") {
+                let board = {
+                    id: this.state.id,
+                    password: password,
+                };
+
+                console.log("board =>" + JSON.stringify(board));
+
+
+                await BoardService.deleteBoard(board).then(res => {
                     console.log("delete result => " + JSON.stringify(res));
                     if (res.status == 200) {
                         window.location.href = '/api/board';

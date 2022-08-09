@@ -4,6 +4,8 @@ import axios from "axios";
 const BOARD_API_BASE_URL = "/api/board";
 const BOARD_API_WRITE_URL = "/api/write";
 const BOARD_API_DETAIL_URL = "/api/detail";
+const BOARD_API_UPDATE_URL = "/api/update";
+const BOARD_API_DELETE_URL = "/api/delete";
 
 class BoardService {
   // 글목록 데이터를 가져오는 함수
@@ -21,11 +23,11 @@ class BoardService {
   }
 
   updateBoard(id, board) {
-    return axios.put(BOARD_API_WRITE_URL + "/" + id, board);
+    return axios.post(BOARD_API_UPDATE_URL + "/" + id, board);
   }
 
-  deleteBoard(id, board) {
-    return axios.delete(BOARD_API_DETAIL_URL + "/" + id, board);
+  deleteBoard(board) {
+    return axios.post(BOARD_API_DELETE_URL, board);
   }
 }
 
