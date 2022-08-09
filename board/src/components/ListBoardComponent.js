@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { useLocation } from "react-router-dom";
 import BoardService from "../service/BoardService";
 
 class ListBoardComponent extends Component {
@@ -7,15 +6,13 @@ class ListBoardComponent extends Component {
     super(props);
     // 페이지에 표시될 글 목록데이터를 넣기위한 변수 board를 this.state에 선언
     // this.state에 선언한 변수의 값을 변경하기 위해서 setState를 사용해야함
-    const location = useLocation;
 
     this.state = {
-      id: location.id,
       board: [],
     };
-
     // 글 작성 버튼을 클릭 했을 때 동작하는 wirteBoard함수를 바인드
     this.writeBoard = this.writeBoard.bind(this);
+    this.detailBoard = this.detailBoard.bind(this);
   }
   // 리액트의 생명주기 메소드인 'componentDidMount'에서 'BoardService'의 메소드를 호출해서 데이터를 가져온다.
   componentDidMount() {
@@ -26,10 +23,11 @@ class ListBoardComponent extends Component {
 
   // 글 작성 버튼을 클릭시 글작성 페이지로 이동하게 해주는 함수를 정의한것.
   writeBoard() {
-    window.location.href = "/api/write";
+    window.location.href = "/api/write/create";
   }
 
   detailBoard(id) {
+    console.log("pass detail ::: " + id)
     window.location.href = `/api/detail/${id}`;
   }
 
@@ -60,15 +58,10 @@ class ListBoardComponent extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.board.map((board) => (
+              {this.state.board.map(board => (
                 <tr key={board.id}>
                   <td>{board.id}</td>
-                  <td
-                    onClick={(e) => {
-                      this.detailBoard(this.state.id, e);
-                    }}
-                  >
-                    {board.title}
+                  <td onClick={() => this.detailBoard(board.id)}>{board.title}
                   </td>
                   <td>{board.content}</td>
                   <td>{board.username}</td>

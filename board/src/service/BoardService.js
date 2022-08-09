@@ -23,6 +23,10 @@ class BoardService {
   updateBoard(id, board) {
     return axios.put(BOARD_API_WRITE_URL + "/" + id, board);
   }
+
+  deleteBoard(id, board) {
+    return axios.delete(BOARD_API_DETAIL_URL + "/" + id, board);
+  }
 }
 
 export default new BoardService();

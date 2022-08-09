@@ -5,7 +5,6 @@ import HeaderComponent from "./components/HeaderComponent";
 import FooterComponent from "./components/FooterComponent";
 import WriteBoardComponent from "./components/WriteBoardComponent";
 import DetailBoardComponent from "./components/DetailBoardComponent";
-import UpdateBoardComponent from "./components/UpdateBoardComponent";
 
 function App() {
   return (
@@ -17,14 +16,10 @@ function App() {
             <Route path="/" element={<ListBoardComponent />}></Route>
             <Route path="/api/board" element={<ListBoardComponent />}></Route>
 
-            <Route path="/api/write" element={<WriteBoardComponent />}></Route>
+            <Route path="/api/write/:id" element={<WriteBoardComponent />}></Route>
             <Route
               path="/api/detail/:id"
               element={<DetailBoardComponent />}
-            ></Route>
-            <Route
-              path="/api/write/:id"
-              element={<UpdateBoardComponent />}
             ></Route>
           </Routes>
         </div>

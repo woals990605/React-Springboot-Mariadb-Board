@@ -3,7 +3,6 @@ package com.example.board.Service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,30 +14,58 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class BoardService {
-    
+
     private final BoardRepository boardRepository;
 
     @Transactional
-    public List<Board> list(){
+    public List<Board> list() {
         return boardRepository.findAll();
     }
 
     @Transactional
-    public Board write(Board board){
+    public Board write(Board board) {
         return boardRepository.save(board);
     }
 
     @Transactional
-    public Board detail(Integer id){
+    public Board detail(Integer id) {
         Optional<Board> boardOp = boardRepository.findById(id);
-        
-        if(boardOp.isPresent()){
+
+        if (boardOp.isPresent()) {
             Board boardEntity = boardOp.get();
             return boardEntity;
-        }else{
-            throw new RuntimeException("해당 아이디를 찾을 수 없습니다."+id);
+        } else {
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다." + id);
         }
-        
-        
+
+    }
+
+    @Transactional
+    public Board update(Integer id, Board board) {
+        Optional<Board> boardOp = boardRepository.findById(id);
+        if (boardOp.isPresent()) {
+            Board boardEntity = boardOp.get();
+            boardEntity.setTitle(board.getTitle());
+            boardEntity.setContent(board.getContent());
+            boardEntity.setUsername(board.getUsername());
+            boardEntity.setPassword(board.getPassword());
+            return boardEntity;
+        } else {
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다." + id);
+        }
+    }
+
+    @Transactional
+    public Board delete(Integer id, Board board) {
+        Optional<Board> boardOp = boardRepository.checkPassword(board);
+        if (boardOp.isPresent()) {
+            Board boardEntity = boardOp.get();
+            System.out.println("============================");
+            System.out.println(boardEntity.getPassword());
+            System.out.println("============================");
+            return boardEntity;
+        }
+        boardRepository.deleteById(id);
+        return board;
     }
 }

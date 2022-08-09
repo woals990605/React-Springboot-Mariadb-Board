@@ -4,9 +4,12 @@ import BoardService from "../service/BoardService";
 class WriteBoardComponent extends Component {
   constructor(props) {
     super(props);
-
+    console.log("location==>" + window.location.search);
+    let array = window.location.pathname.split("/") ?? null;
+    let id = array[array.length - 1]
     // this.state에 폼 양식에서 사용될 파라미터를 정의
     this.state = {
+      id: id,
       title: "",
       content: "",
       username: "",
@@ -47,30 +50,65 @@ class WriteBoardComponent extends Component {
       username: this.state.username,
       password: this.state.password,
     };
-    if (board.title == null || board.title == "") {
+    if (board.title === null || board.title === "") {
       return alert("title를 입력해주세요");
     } else {
-      if (board.content == null || board.content == "") {
+      if (board.content === null || board.content === "") {
         return alert("content를 입력해주세요");
       } else {
-        if (board.username == null || board.username == "") {
+        if (board.username === null || board.username === "") {
           return alert("username을 입력해주세요");
         } else {
-          if (board.password == null || board.password == "") {
+          if (board.password === null || board.password === "") {
             return alert("비밀번호를 입력해주세요");
           }
         }
       }
+    };
+    if (this.setState.id === 'create') {
+      console.log("board =>" + JSON.stringify(board));
+      BoardService.writeBoard(board).then(res => {
+        window.location.href = "/api/board";
+      });
+    } else {
+      console.log("board =>" + JSON.stringify(board));
+      BoardService.updateBoard(this.state.id, board).then(res => {
+        window.location.href = "/api/board";
+      });
     }
-    console.log("board =>" + JSON.stringify(board));
-    BoardService.writeBoard(board).then((res) => {
-      window.location.href = "/api/board";
-    });
+
   };
 
   // 글 작성 취소시 글 목록페이지로 이동
   cancel() {
     window.location.href = "/api/board";
+  }
+
+  getTitle() {
+    if (this.state.id === "create") {
+      return <h3 className="text-center">글쓰기 페이지</h3>
+    } else {
+      return <h3 className="text-center">{this.state.id}번글 수정 페이지</h3>
+    }
+  }
+
+  componentDidMount() {
+    if (this.state.id === "create") {
+      return
+    } else {
+      BoardService.detailBoard(this.state.id).then((res) => {
+        let board = res.data;
+        console.log("board => " + JSON.stringify(board));
+
+        this.setState({
+          title: board.data.title,
+          content: board.data.content,
+          username: board.data.username,
+          password: board.data.password
+
+        })
+      })
+    }
   }
 
   render() {
@@ -79,7 +117,7 @@ class WriteBoardComponent extends Component {
         <div className="container">
           <div className="row">
             <div className="card col-md-6 offset-md-3 offset-md-3">
-              <h3 className="text-center">글쓰기 페이지</h3>
+              {this.getTitle()}
               <div className="card-body">
                 <form>
                   <div className="form-group">
@@ -88,7 +126,7 @@ class WriteBoardComponent extends Component {
                       placeholder="text"
                       name="title"
                       className="form-control"
-                      value={this.state.title}
+                      value={this.state?.title || ""}
                       onChange={this.changeTitleHandler}
                       required
                     ></input>
@@ -100,7 +138,7 @@ class WriteBoardComponent extends Component {
                       placeholder="content"
                       name="content"
                       className="form-control"
-                      value={this.state.content}
+                      value={this.state.content || ""}
                       onChange={this.changeContentHandler}
                       required
                     />
@@ -111,7 +149,7 @@ class WriteBoardComponent extends Component {
                       placeholder="username"
                       name="username"
                       className="form-control"
-                      value={this.state.username}
+                      value={this.state.username || ""}
                       onChange={this.changeUsernameHandler}
                       required
                     />
@@ -123,7 +161,7 @@ class WriteBoardComponent extends Component {
                       placeholder="password"
                       name="password"
                       className="form-control"
-                      value={this.state.password}
+                      value={this.state.password || ""}
                       onChange={this.changePasswordHandler}
                       required
                     />
@@ -138,7 +176,7 @@ class WriteBoardComponent extends Component {
                   <button
                     type="button"
                     className="btn btn-danger"
-                    onClick={this.cancel}
+                    onClick={this.cancel.bind(this)}
                     style={{ marginLeft: "10px" }}
                   >
                     Cancel
