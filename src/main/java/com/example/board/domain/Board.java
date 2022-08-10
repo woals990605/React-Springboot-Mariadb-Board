@@ -48,7 +48,6 @@ public class Board {
     private String password;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @CreatedDate
     private LocalDateTime createDate;
 }

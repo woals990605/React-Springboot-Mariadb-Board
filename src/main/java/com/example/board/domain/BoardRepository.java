@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
-    @Query(value = "SELECT * FROM Board WHERE password = :password", nativeQuery = true)
-    Optional<Board> checkPassword(@Param("password") Board board);
+    @Query(value = "SELECT * FROM Board WHERE id = :id AND password = :password", nativeQuery = true)
+    Optional<Board> checkPassword(@Param("id")Integer id,@Param("password") String password);
 }

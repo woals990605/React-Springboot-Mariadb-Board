@@ -23,12 +23,12 @@ class ListBoardComponent extends Component {
 
   // 글 작성 버튼을 클릭시 글작성 페이지로 이동하게 해주는 함수를 정의한것.
   writeBoard() {
-    window.location.href = "/api/write/create";
+    window.location.href = "/write/create";
   }
 
   detailBoard(id) {
-    console.log("pass detail ::: " + id)
-    window.location.href = `/api/detail/${id}`;
+    console.log("pass detail ::: " + id);
+    window.location.href = `/detail/${id}`;
   }
 
   // render() 함수의 내용이 실제 웹페이지에 표시된다.
@@ -58,10 +58,11 @@ class ListBoardComponent extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.board.map(board => (
+              {this.state.board.map((board) => (
                 <tr key={board.id}>
                   <td>{board.id}</td>
-                  <td onClick={() => this.detailBoard(board.id)}>{board.title}
+                  <td onClick={() => this.detailBoard(board.id)}>
+                    {board.title}
                   </td>
                   <td>{board.content}</td>
                   <td>{board.username}</td>

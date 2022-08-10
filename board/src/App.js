@@ -14,11 +14,10 @@ function App() {
         <div className="container">
           <Routes>
             <Route path="/" element={<ListBoardComponent />}></Route>
-            <Route path="/api/board" element={<ListBoardComponent />}></Route>
-
-            <Route path="/api/write/:id" element={<WriteBoardComponent />}></Route>
+            <Route path="/board" element={<ListBoardComponent />}></Route>
+            <Route path="/write/:id" element={<WriteBoardComponent />}></Route>
             <Route
-              path="/api/detail/:id"
+              path="/detail/:id"
               element={<DetailBoardComponent />}
             ></Route>
           </Routes>

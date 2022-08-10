@@ -32,11 +32,12 @@ public class BoardController {
     }
 
     @PostMapping("/api/write")
-    public Board writeBoard(@RequestBody Board board) {
+    public ResponseDto<?> writeBoard(@RequestBody Board board) {
         System.out.println("=================================");
         System.out.println(board);
         System.out.println("=================================");
-        return boardService.write(board);
+        boardService.write(board);
+        return new ResponseDto<>(1, "성공", null);
     }
 
     @GetMapping("/api/detail/{id}")
@@ -51,12 +52,16 @@ public class BoardController {
         return new ResponseDto<>(1, "성공", boardEntity);
     }
 
-    @PostMapping("/api/delete")
-    public ResponseDto<?> delete(@RequestBody Board board) {
-        Board boardEntity = boardService.delete(board);
+    @PostMapping("/api/delete/{id}")
+    public ResponseDto<?> delete(@PathVariable Integer id,@RequestBody Board board) {
+        Board boardEntity = boardService.delete(id,board);
         System.out.println("=================================");
         System.out.println(boardEntity);
         System.out.println("=================================");
-        return new ResponseDto<>(1, "성공", boardEntity);
+        if(boardEntity == null) {
+            return new ResponseDto<>(-1, "실패", null);
+        } else {
+            return new ResponseDto<>(1, "성공", boardEntity);
+        }
     }
 }

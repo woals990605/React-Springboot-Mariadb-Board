@@ -17,7 +17,6 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    @Transactional
     public List<Board> list() {
         return boardRepository.findAll();
     }
@@ -35,37 +34,58 @@ public class BoardService {
             Board boardEntity = boardOp.get();
             return boardEntity;
         } else {
-            throw new RuntimeException("해당 아이디를 찾을 수 없습니다." + id);
+            throw new RuntimeException("해당 글을 찾을 수 없습니다." + id);
         }
 
     }
 
     @Transactional
     public Board update(Integer id, Board board) {
+        Optional<Board> boardOpPw = boardRepository.checkPassword(id,board.getPassword());
         Optional<Board> boardOp = boardRepository.findById(id);
-        if (boardOp.isPresent()) {
-            Board boardEntity = boardOp.get();
-            boardEntity.setTitle(board.getTitle());
-            boardEntity.setContent(board.getContent());
-            boardEntity.setUsername(board.getUsername());
-            boardEntity.setPassword(board.getPassword());
-            return boardEntity;
-        } else {
+        if (boardOpPw.isPresent()) {
+            System.out.println("update :: boardOp2 : "+boardOpPw);
+            Board boardEntityPw = boardOp.get();
+            System.out.println("update :: boardOp3 : "+boardEntityPw);
+            if (boardOp.isPresent()) {
+                Board boardEntity = boardOp.get();
+                System.out.println("update :: boardOp1 : "+boardOp);
+                System.out.println("board :"+board);
+                boardEntity.setTitle(boardEntityPw.getTitle());
+                boardEntity.setContent(boardEntityPw.getContent());
+                boardEntity.setUsername(boardEntityPw.getUsername());
+                boardEntity.setPassword(boardEntityPw.getPassword());
+                
+                System.out.println("update :: boardEntity : "+boardEntity);
+               
+                System.out.println("update :: boardOp3 : "+boardEntity);
+                return boardEntity;
+            }
+            return boardEntityPw;
+        }
+         else {
             throw new RuntimeException("해당 아이디를 찾을 수 없습니다." + id);
         }
     }
 
     @Transactional
-    public Board delete(Board board) {
-        Optional<Board> boardOp = boardRepository.checkPassword(board);
+    public Board delete(Integer id, Board board) {
+        // System.out.println("delete :: id : "+id);
+        // System.out.println("delete :: pwd : "+board.getPassword());
+        Optional<Board> boardOp = boardRepository.checkPassword(id,board.getPassword());
+        // System.out.println("delete :: boardOp : "+boardOp);
+
         if (boardOp.isPresent()) {
             Board boardEntity = boardOp.get();
-            System.out.println("============================");
-            System.out.println(boardEntity.getPassword());
-            System.out.println("============================");
-            return boardEntity;
+            System.out.println("delete :: boardOp : "+boardEntity);
+
+            try {
+                boardRepository.delete(board);
+                return boardEntity;
+            } catch(Exception e) {
+                return null;
+            }
         }
-        boardRepository.delete(board);
-        return board;
+        return null;
     }
 }
