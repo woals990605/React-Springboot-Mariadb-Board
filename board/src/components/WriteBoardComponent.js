@@ -76,12 +76,15 @@ class WriteBoardComponent extends Component {
       if (window.confirm("글을 수정하시겠습니까?")) {
         let password = window.prompt("비밀번호를 입력해주세요.");
         if (password !== "") {
-          let board = {
+          let board2 = {
             id: this.state.id,
+            title: board.title,
+            content: board.content,
+            username: board.username,
             password: password,
           };
-          console.log("board =>" + JSON.stringify(board));
-          BoardService.updateBoard(this.state.id, board).then((res) => {
+          console.log("board =>" + JSON.stringify(board2));
+          BoardService.updateBoard(this.state.id, board2).then((res) => {
             console.log("update result => " + JSON.stringify(res));
             console.log(
               "update result code => " + JSON.stringify(res.data.code)

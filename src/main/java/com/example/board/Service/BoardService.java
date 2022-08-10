@@ -51,10 +51,10 @@ public class BoardService {
                 Board boardEntity = boardOp.get();
                 System.out.println("update :: boardOp1 : "+boardOp);
                 System.out.println("board :"+board);
-                boardEntity.setTitle(boardEntityPw.getTitle());
-                boardEntity.setContent(boardEntityPw.getContent());
-                boardEntity.setUsername(boardEntityPw.getUsername());
-                boardEntity.setPassword(boardEntityPw.getPassword());
+                boardEntity.setTitle(board.getTitle());
+                boardEntity.setContent(board.getContent());
+                boardEntity.setUsername(board.getUsername());
+                boardEntity.setPassword(board.getPassword());
                 
                 System.out.println("update :: boardEntity : "+boardEntity);
                
