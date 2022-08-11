@@ -43,11 +43,11 @@ class ListBoardComponent extends Component {
     console.log("tis ; key ::" + this.state.keyword)
   }
 
-  clickBoard = (keyword) => {
+  clickBoard = () => {
     let param = {
       keyword: this.state.keyword
     }
-    BoardService.getSearch(param).then((res) => {
+    BoardService.getSearch(param.keyword).then((res) => {
       console.log("tis ; key ==============::" + param)
       console.log("tis ; key ::" + this.state.keyword)
       console.log("tis ; keyres ::" + res.data)

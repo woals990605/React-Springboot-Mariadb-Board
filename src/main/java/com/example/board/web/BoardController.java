@@ -41,12 +41,12 @@ public class BoardController {
     // return boardService.search(keyword);
     // }
 
-    @PostMapping("/api/search")
-    public List<Board> searchBoard(@RequestBody Map map) {
+    @GetMapping("/api/search/{keyword}")
+    public List<Board> searchBoard(@PathVariable String keyword) {
         System.out.println("=================================");
-        System.out.println(map.get("keyword"));
+        System.out.println(keyword);
         System.out.println("=================================");
-        return boardService.search(map.get("keyword").toString());
+        return boardService.search(keyword);
     }
 
     @PostMapping("/api/write")

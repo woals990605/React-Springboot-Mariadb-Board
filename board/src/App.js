@@ -15,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ListBoardComponent />}></Route>
             <Route path="/board" element={<ListBoardComponent />}></Route>
-            <Route path="/search" element={<ListBoardComponent />}></Route>
+            <Route path="/search/:keyword" element={<ListBoardComponent />}></Route>
             <Route path="/write/:id" element={<WriteBoardComponent />}></Route>
             <Route
               path="/detail/:id"
