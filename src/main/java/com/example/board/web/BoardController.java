@@ -2,6 +2,7 @@ package com.example.board.web;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.board.Service.BoardService;
@@ -29,6 +33,20 @@ public class BoardController {
     @GetMapping("/api/board")
     public List<Board> list() {
         return boardService.list();
+    }
+
+    // @RequestMapping(value = "/api/search", method = RequestMethod.GET)
+    // public List<Board> search(@RequestParam("keyword") String keyword) {
+    // System.out.println("keyword : : :" + keyword);
+    // return boardService.search(keyword);
+    // }
+
+    @PostMapping("/api/search")
+    public List<Board> searchBoard(@RequestBody Map map) {
+        System.out.println("=================================");
+        System.out.println(map.get("keyword"));
+        System.out.println("=================================");
+        return boardService.search(map.get("keyword").toString());
     }
 
     @PostMapping("/api/write")
@@ -53,12 +71,12 @@ public class BoardController {
     }
 
     @PostMapping("/api/delete/{id}")
-    public ResponseDto<?> delete(@PathVariable Integer id,@RequestBody Board board) {
-        Board boardEntity = boardService.delete(id,board);
+    public ResponseDto<?> delete(@PathVariable Integer id, @RequestBody Board board) {
+        Board boardEntity = boardService.delete(id, board);
         System.out.println("=================================");
         System.out.println(boardEntity);
         System.out.println("=================================");
-        if(boardEntity == null) {
+        if (boardEntity == null) {
             return new ResponseDto<>(-1, "실패", null);
         } else {
             return new ResponseDto<>(1, "성공", boardEntity);

@@ -3,6 +3,7 @@ import axios from "axios";
 // springboot api의 URL을 정의
 const BOARD_API_BASE_URL = "/api";
 const BOARD_API_LIST_URL = BOARD_API_BASE_URL + "/board";
+const BOARD_API_SEARCH_URL = BOARD_API_BASE_URL + "/search";
 const BOARD_API_WRITE_URL = BOARD_API_BASE_URL + "/write";
 const BOARD_API_DETAIL_URL = BOARD_API_BASE_URL + "/detail";
 const BOARD_API_UPDATE_URL = BOARD_API_BASE_URL + "/update";
@@ -12,6 +13,11 @@ class BoardService {
   // 글목록 데이터를 가져오는 함수
   getBoards() {
     return axios.get(BOARD_API_LIST_URL);
+  }
+
+  getSearch(param) {
+    console.log("keyword++++++++++++++++++++" + param)
+    return axios.post(BOARD_API_SEARCH_URL, param);
   }
 
   writeBoard(board) {
