@@ -19,8 +19,12 @@ class ListBoardComponent extends Component {
   // 리액트의 생명주기 메소드인 'componentDidMount'에서 'BoardService'의 메소드를 호출해서 데이터를 가져온다.
   componentDidMount = () => {
     BoardService.getBoards().then((res) => {
-      this.setState({ board: res.data });
+      this.setState({
+        board: res.data.reverse(),
+        no: res.data.length
+      });
     });
+
     // BoardService.getSeach().then((res) => {
     //   this.setState({ keyword: res.data });
     // })
@@ -90,7 +94,7 @@ class ListBoardComponent extends Component {
             <tbody>
               {this.state.board.map((board) => (
                 <tr key={board.id}>
-                  <td>{board.id}</td>
+                  <td>{this.state.no--}</td>
                   <td onClick={() => this.detailBoard(board.id)}>
                     {board.title}
                   </td>

@@ -17,7 +17,11 @@ class BoardService {
 
   getSearch(keyword) {
     console.log("keyword++++++++++++++++++++" + keyword)
-    return axios.get(BOARD_API_SEARCH_URL + "/" + keyword);
+    return axios.get(BOARD_API_SEARCH_URL, {
+      params: {
+        keyword: keyword
+      }
+    });
   }
 
   writeBoard(board) {

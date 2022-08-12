@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,8 +42,8 @@ public class BoardController {
     // return boardService.search(keyword);
     // }
 
-    @GetMapping("/api/search/{keyword}")
-    public List<Board> searchBoard(@PathVariable String keyword) {
+    @GetMapping("/api/search")
+    public List<Board> searchBoard(@RequestParam String keyword) {
         System.out.println("=================================");
         System.out.println(keyword);
         System.out.println("=================================");
