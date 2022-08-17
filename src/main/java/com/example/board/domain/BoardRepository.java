@@ -13,6 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer> {
 
+	@Query(value = " SELECT * FROM board WHERE 0<id ORDER BY id DESC LIMIT ?,10;", nativeQuery = true)
+	List<Board> findFromTo(
+			final Integer objectStartNum,
+			final Integer objectEndNum);
+
     @Query(value = "SELECT * FROM Board WHERE id = :id AND password = :password", nativeQuery = true)
     Optional<Board> checkPassword(@Param("id") Integer id, @Param("password") String password);
 

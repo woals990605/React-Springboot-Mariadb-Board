@@ -32,9 +32,11 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/api/board")
-    public List<Board> list() {
-        return boardService.list();
-    }
+    public ResponseEntity<?> getAllBoards(@RequestParam(value = "p_num", required=false) Integer p_num) {
+		if (p_num == null || p_num <= 0) p_num = 1;
+		
+		return boardService.getPagingBoard(p_num);
+	}
 
     // @RequestMapping(value = "/api/search", method = RequestMethod.GET)
     // public List<Board> search(@RequestParam("keyword") String keyword) {
