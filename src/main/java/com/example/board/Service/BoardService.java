@@ -1,17 +1,17 @@
 package com.example.board.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.board.domain.Board;
 import com.example.board.domain.BoardRepository;
+import com.example.board.domain.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +20,33 @@ import lombok.RequiredArgsConstructor;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+
+    public int findAllCount() {
+		return (int) boardRepository.count();
+	}
+	
+	// get paging boards data
+	public ResponseEntity<?> getPagingBoard(Integer p_num) {
+		Map result = null;
+		
+		PagingUtil pu = new PagingUtil(p_num, 10, 5); // ($1:표시할 현재 페이지, $2:한페이지에 표시할 글 수, $3:한 페이지에 표시할 페이지 버튼의 수 )
+		List<Board> list = boardRepository.findFromTo(pu.getObjectStartNum(), pu.getObjectCountPerPage());
+		pu.setObjectCountTotal(findAllCount());
+		pu.setCalcForPaging();
+		
+		System.out.println("p_num : "+p_num);
+		System.out.println(pu.toString());
+		
+		if (list == null || list.size() == 0) {
+			return null;
+		}
+		
+		result = new HashMap<>();
+		result.put("pagingData", pu);
+		result.put("list", list);
+		
+		return ResponseEntity.ok(result);
+	}
 
     public List<Board> list() {
         return boardRepository.findAll();
