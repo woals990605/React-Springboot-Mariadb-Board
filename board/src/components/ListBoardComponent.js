@@ -10,8 +10,8 @@ class ListBoardComponent extends Component {
     this.state = {
       board: [],
       keyword: "",
-      paging: {},
       p_num: 1,
+      count: 0
     };
     // 글 작성 버튼을 클릭 했을 때 동작하는 wirteBoard함수를 바인드
     this.writeBoard = this.writeBoard.bind(this);
@@ -20,13 +20,21 @@ class ListBoardComponent extends Component {
   }
   // 리액트의 생명주기 메소드인 'componentDidMount'에서 'BoardService'의 메소드를 호출해서 데이터를 가져온다.
   componentDidMount = () => {
-    BoardService.getBoards(this.state.p_num).then((res) => {
+    let param = {
+      keyword: this.state.keyword,
+      p_num: this.state.p_num
+    };
+    // console.log("count : : : : " + this.state.count)
+    // console.log("first param keyword : :" + param.keyword)
+    // console.log("first param p_num : :" + param.p_num)
+    BoardService.getSearch(param.keyword, param.p_num).then((res) => {
+      // console.log("res res " + JSON.stringify(res))
       this.setState({
-        board: res.data.list,
-        no: res.data.length,
-        p_num: res.data.pagingData.currentPageNum,
-        paging: res.data.pagingData,
+        board: res.data.boardList,
+        p_num: this.state.p_num,
+        count: res.data.allCount
       });
+
     });
 
     // BoardService.getSeach().then((res) => {
@@ -40,7 +48,7 @@ class ListBoardComponent extends Component {
   }
 
   detailBoard(id) {
-    console.log("pass detail ::: " + id);
+    // console.log("pass detail ::: " + id);
     window.location.href = `/detail/${id}`;
   }
 
@@ -48,52 +56,59 @@ class ListBoardComponent extends Component {
     this.setState({
       keyword: e.target.value,
     });
-    console.log("tis ; key ::" + this.state.keyword);
   }
 
   clickBoard = () => {
     let param = {
       keyword: this.state.keyword,
+      p_num: this.state.p_num
     };
-    BoardService.getSearch(param.keyword).then((res) => {
-      console.log("tis ; key ==============::" + param);
-      console.log("tis ; key ::" + this.state.keyword);
-      console.log("tis ; keyres ::" + res.data);
-      this.setState({ board: res.data });
+    BoardService.getSearch(param.keyword, param.p_num).then((res) => {
+      this.setState({
+        board: res.data.boardList,
+        count: res.data.allCount
+      });
     });
   };
 
   listBoard(page) {
-    let nParam = {
-      p_num: this.state.p_num,
+    // console.log("listBoard : : :")
+    let param = {
+      keyword: this.state.keyword,
+      p_num: page
     };
-    console.log("pageNum : " + this.state.p_num);
-    BoardService.getBoards(nParam.p_num).then((res) => {
-      console.log("tis ; page ==============::" + nParam.p_num);
-      console.log(res.data);
-      console.log("page page : " + page);
-      this.setState({ p_num: page });
-      // this.setState({
-      //   p_num: res.data.pagingData.currentPageNum,
-      //   paging: res.data.pagingData,
-      //   board: res.data.list,
-      // });
+    // console.log("pageNum1 : " + this.state.p_num);
+    this.setState({ p_num: page });
+    // console.log("pageNum 2: " + param.p_num);
+    BoardService.getSearch(param.keyword, page).then((res) => {
+      // console.log("tis ; page2 ==============::" + param.p_num);
+      // console.log(res.data);
+      // console.log("page page : " + param.p_num);
+      this.setState({
+        board: res.data.boardList,
+        count: res.data.allCount
+      });
+      if (this.state.p_num === 0) {
+        this.setState({
+          p_num: 1
+        })
+      }
+      // console.log(": : : ::: :param.p :" + param.p_num)
     });
   }
 
-  viewPaging() {
-    const pageNums = [];
-
-    console.log(pageNums);
-    for (
-      let i = this.state.paging.pageNumStart;
-      i <= this.state.paging.pageNumEnd;
-      i++
-    ) {
+  viewPaging(page) {
+    let pageNums = [];
+    // console.log("page1 : " + page)
+    for (let i = page; i <= Math.ceil(this.state.count / 10); i++) {
+      // console.log("viewPaging : i " + i)
+      // console.log("viewPaging : length " + pageNums.length)
       pageNums.push(i);
     }
+    let p_slice = pageNums.slice(0, 5)
 
-    return pageNums.map((page) => (
+    // console.log("pageNums : " + p_slice.length)
+    return p_slice.map((page) => (
       <li className="page-item" key={page.toString()}>
         <a className="page-link" onClick={() => this.listBoard(page)}>
           {page}
@@ -104,43 +119,39 @@ class ListBoardComponent extends Component {
 
   isPagingPrev() {
     // < 앞페이지
-    if (this.state.paging.prev) {
-      console.log("this.state.paging.prev" + this.state.paging.prev);
-      return (
-        <li className="page-item">
-          <a
-            className="page-link"
-            onClick={() => this.listBoard(this.state.p_num - 1)}
-            tabindex="-1"
-          >
-            &lt;
-          </a>
-        </li>
-      );
-    }
+    return (
+      <li className="page-item">
+        <a
+          className="page-link"
+          onClick={() => this.listBoard(this.state.p_num - 1)}
+          tabIndex="-1"
+        >
+          &lt;
+        </a>
+      </li>
+    );
+
   }
 
   isPagingNext() {
     // > 다음페이지
-    if (this.state.paging.next) {
-      console.log("this.state.paging.next" + this.state.paging.next);
-      return (
-        <li className="page-item">
-          <a
-            className="page-link"
-            onClick={() => this.listBoard(this.state.p_num + 1)}
-            tabIndex="-1"
-          >
-            &gt;
-          </a>
-        </li>
-      );
-    }
+    return (
+      <li className="page-item">
+        <a
+          className="page-link"
+          onClick={() => this.listBoard(this.state.p_num === 0 ? this.state.p_num + 2 : this.state.p_num + 1)}
+          tabIndex="-1"
+        >
+          &gt;
+        </a>
+      </li>
+    );
+
   }
 
   isMoveToFirstPage() {
     // << 처음페이지
-    if (this.state.p_num != 1) {
+    if (this.state.p_num !== 1) {
       return (
         <li className="page-item">
           <a
@@ -157,15 +168,15 @@ class ListBoardComponent extends Component {
 
   isMoveToLastPage() {
     // >> 마지막페이지
-    if (this.state.p_num != this.state.paging.pageNumCountTotal) {
+    if (this.state.p_num <= Math.ceil(this.state.count / 10)) {
       return (
         <li className="page-item">
           <a
             className="page-link"
-            onClick={() => this.listBoard(this.state.paging.pageNumCountTotal)}
+            onClick={() => this.listBoard(Math.ceil(this.state.count / 10))}
             tabIndex="-1"
           >
-            &gt;&gt;({this.state.paging.pageNumCountTotal})
+            &gt;&gt;({Math.ceil(this.state.count / 10)})
           </a>
         </li>
       );
@@ -216,9 +227,9 @@ class ListBoardComponent extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.board.map((board) => (
+              {this.state.board.map((board, index) => (
                 <tr key={board.id}>
-                  <td>{board.id}</td>
+                  <td>{(index + 1) + ((this.state.p_num - 1) * 10)}</td>
                   <td onClick={() => this.detailBoard(board.id)}>
                     {board.title}
                   </td>
@@ -235,7 +246,7 @@ class ListBoardComponent extends Component {
             <ul className="pagination justify-content-center">
               {this.isMoveToFirstPage()}
               {this.isPagingPrev()}
-              {this.viewPaging()}
+              {this.viewPaging(this.state.p_num)}
               {this.isPagingNext()}
               {this.isMoveToLastPage()}
             </ul>
