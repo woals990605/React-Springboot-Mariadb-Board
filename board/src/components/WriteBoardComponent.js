@@ -145,7 +145,7 @@ class WriteBoardComponent extends Component {
                     <label> Title </label>
                     <input
                       placeholder="text"
-                      maxlength="50"
+                      maxLength="50"
                       name="title"
                       className="form-control"
                       value={this.state?.title || ""}
@@ -158,7 +158,7 @@ class WriteBoardComponent extends Component {
                     <input
                       type="text"
                       placeholder="content"
-                      maxlength="200"
+                      maxLength="200"
                       name="content"
                       className="form-control"
                       value={this.state.content || ""}
@@ -170,7 +170,7 @@ class WriteBoardComponent extends Component {
                     <label> Username </label>
                     <input
                       placeholder="username"
-                      maxlength="50"
+                      maxLength="50"
                       name="username"
                       className="form-control"
                       value={this.state.username || ""}
@@ -183,7 +183,7 @@ class WriteBoardComponent extends Component {
                     <input
                       type="password"
                       placeholder="password"
-                      maxlength="50"
+                      maxLength="50"
                       name="password"
                       className="form-control"
                       value={this.state.password || ""}

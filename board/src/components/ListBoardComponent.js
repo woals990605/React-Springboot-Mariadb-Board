@@ -139,7 +139,7 @@ class ListBoardComponent extends Component {
       <li className="page-item">
         <a
           className="page-link"
-          onClick={() => this.listBoard(this.state.p_num === 0 ? this.state.p_num + 2 : this.state.p_num + 1)}
+          onClick={() => this.listBoard(this.state.p_num === Math.ceil(this.state.count / 10) ? this.state.p_num + 0 : this.state.p_num + 1)}
           tabIndex="-1"
         >
           &gt;
