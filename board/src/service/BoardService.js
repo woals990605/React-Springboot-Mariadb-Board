@@ -11,20 +11,16 @@ const BOARD_API_DELETE_URL = BOARD_API_BASE_URL + "/delete";
 
 class BoardService {
   // 글목록 데이터를 가져오는 함수
-  getBoards(p_num) {
-    console.log("pag++++++++++++++++++++" + p_num);
-    return axios.get(BOARD_API_LIST_URL, {
-      nParam: {
-        p_num: p_num,
-      },
-    });
+  getBoards() {
+    return axios.get(BOARD_API_LIST_URL);
   }
 
-  getSearch(keyword) {
-    console.log("keyword++++++++++++++++++++" + keyword);
+  getSearch(keyword, p_num) {
+    // console.log("keyword++++++++++++++++++++" + keyword + p_num);
     return axios.get(BOARD_API_SEARCH_URL, {
       params: {
         keyword: keyword,
+        p_num: p_num
       },
     });
   }

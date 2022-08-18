@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.board.domain.Board;
 import com.example.board.domain.BoardRepository;
-import com.example.board.domain.util.PagingUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,40 +19,22 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public int findAllCount() {
-		return (int) boardRepository.count();
-	}
-	
-	// get paging boards data
-	public ResponseEntity<?> getPagingBoard(Integer p_num) {
-		Map result = null;
-		
-		PagingUtil pu = new PagingUtil(p_num, 10, 5); // ($1:표시할 현재 페이지, $2:한페이지에 표시할 글 수, $3:한 페이지에 표시할 페이지 버튼의 수 )
-		List<Board> list = boardRepository.findFromTo(pu.getObjectStartNum(), pu.getObjectCountPerPage());
-		pu.setObjectCountTotal(findAllCount());
-		pu.setCalcForPaging();
-		
-		System.out.println("p_num : "+p_num);
-		System.out.println(pu.toString());
-		
-		if (list == null || list.size() == 0) {
-			return null;
-		}
-		
-		result = new HashMap<>();
-		result.put("pagingData", pu);
-		result.put("list", list);
-		
-		return ResponseEntity.ok(result);
-	}
-
     public List<Board> list() {
         return boardRepository.findAll();
     }
 
-    public List<Board> search(String keyword) {
-        System.out.println("service search++++++++++++++++++++++++++++" + keyword);
-        return boardRepository.mList(keyword);
+    public Map search(String keyword, Integer p_num) {
+        int allCount = 0;
+        System.out.println("service search++++++++++++++++++++++++++++" + keyword + p_num);
+        int nowPage = p_num;
+        int perPageNum = 10;
+        int rowStart = ((nowPage - 1) * perPageNum);
+        System.out.println("rowStart : : :" + rowStart);
+        allCount = boardRepository.mListCount(keyword);
+        Map map = new HashMap<>();
+        map.put("boardList", boardRepository.mList(keyword, rowStart));
+        map.put("allCount", allCount);
+        return map;
     }
 
     @Transactional

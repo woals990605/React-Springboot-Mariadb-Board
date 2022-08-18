@@ -1,20 +1,13 @@
 package com.example.board.web;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,12 +25,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/api/board")
-    public ResponseEntity<?> getAllBoards(@RequestParam(value = "p_num", required=false) Integer p_num) {
-		if (p_num == null || p_num <= 0) p_num = 1;
-		
-		return boardService.getPagingBoard(p_num);
-	}
-
+    public List<Board> list() {
+        return boardService.list();
+    }
     // @RequestMapping(value = "/api/search", method = RequestMethod.GET)
     // public List<Board> search(@RequestParam("keyword") String keyword) {
     // System.out.println("keyword : : :" + keyword);
@@ -45,11 +35,14 @@ public class BoardController {
     // }
 
     @GetMapping("/api/search")
-    public List<Board> searchBoard(@RequestParam String keyword) {
+    public Map searchBoard(@RequestParam String keyword, @RequestParam Integer p_num) {
         System.out.println("=================================");
-        System.out.println(keyword);
+        if (p_num == null || p_num <= 0)
+            p_num = 1;
+        System.out.println("키원드: : : : :" + keyword + "dsalkfjalskdjlk");
+        System.out.println(p_num);
         System.out.println("=================================");
-        return boardService.search(keyword);
+        return boardService.search(keyword, p_num);
     }
 
     @PostMapping("/api/write")
