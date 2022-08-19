@@ -6,6 +6,8 @@ class ListBoardComponent extends Component {
     super(props);
     // 페이지에 표시될 글 목록데이터를 넣기위한 변수 board를 this.state에 선언
     // this.state에 선언한 변수의 값을 변경하기 위해서 setState를 사용해야함
+    let array = window.location.pathname.split("/") ?? null;
+    let = array[array.length - 1];
 
     this.state = {
       board: [],
@@ -20,6 +22,8 @@ class ListBoardComponent extends Component {
   }
   // 리액트의 생명주기 메소드인 'componentDidMount'에서 'BoardService'의 메소드를 호출해서 데이터를 가져온다.
   componentDidMount = () => {
+    // window.localStorage.removeItem("p_num");
+
     let param = {
       keyword: this.state.keyword,
       p_num: this.state.p_num
@@ -34,7 +38,7 @@ class ListBoardComponent extends Component {
         p_num: this.state.p_num,
         count: res.data.allCount
       });
-
+      console.log("listBoard : : : " + this.state.count)
     });
 
     // BoardService.getSeach().then((res) => {
@@ -48,8 +52,11 @@ class ListBoardComponent extends Component {
   }
 
   detailBoard(id) {
-    // console.log("pass detail ::: " + id);
+    window.localStorage.setItem("p_num", this.state.p_num);
+
     window.location.href = `/detail/${id}`;
+    console.log("p : :: " + this.state.p_num);
+
   }
 
   searchBoard(e) {
@@ -72,7 +79,7 @@ class ListBoardComponent extends Component {
   };
 
   listBoard(page) {
-    // console.log("listBoard : : :")
+
     let param = {
       keyword: this.state.keyword,
       p_num: page
@@ -98,6 +105,7 @@ class ListBoardComponent extends Component {
   }
 
   viewPaging(page) {
+    console.log("listBoard : : : " + this.state.count)
     let pageNums = [];
     // console.log("page1 : " + page)
     for (let i = page; i <= Math.ceil(this.state.count / 10); i++) {
@@ -193,7 +201,7 @@ class ListBoardComponent extends Component {
             name="keyword"
             type="text"
             placeholder="Search"
-            onKeyUp={this.searchBoard}
+            onKeyPress={this.searchBoard}
             onChange={this.searchBoard}
             value={this.state.keyword}
           />
@@ -229,7 +237,7 @@ class ListBoardComponent extends Component {
             <tbody>
               {this.state.board.map((board, index) => (
                 <tr key={board.id}>
-                  <td>{(index + 1) + ((this.state.p_num - 1) * 10)}</td>
+                  <td>{(Math.ceil(this.state.count - index)) - (this.state.p_num - 1) * 10}</td>
                   <td onClick={() => this.detailBoard(board.id)}>
                     {board.title}
                   </td>
