@@ -15,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<ListBoardComponent />}></Route>
             <Route
-              path="/board"
+              path="/board/:p_num"
               element={<ListBoardComponent />}
             ></Route>
             <Route

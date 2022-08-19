@@ -25,8 +25,12 @@ class BoardService {
     });
   }
 
-  writeBoard(board) {
-    return axios.post(BOARD_API_WRITE_URL, board);
+  writeBoard(formData) {
+    return axios.post(BOARD_API_WRITE_URL, formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
   }
 
   detailBoard(id) {

@@ -45,6 +45,10 @@ public class Board {
     @Size(min = 1, max = 50)
     private String password;
 
+    private String filename;
+
+    private String filepath;
+
     @Column(nullable = false)
     @CreatedDate
     private LocalDateTime createDate;

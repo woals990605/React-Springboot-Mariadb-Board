@@ -1,12 +1,15 @@
 package com.example.board.Service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.board.domain.Board;
 import com.example.board.domain.BoardRepository;
@@ -38,8 +41,19 @@ public class BoardService {
     }
 
     @Transactional
-    public Board write(Board board) {
-        return boardRepository.save(board);
+    public void write(Board board, MultipartFile file) throws Exception {
+        String filePath= System.getProperty("/home/woals990605/사진")+"/src/main/resources/static/files";
+        System.out.println("=============================================");
+        System.out.println(filePath);
+        System.out.println("========================================filepath");
+        UUID uuid =UUID.randomUUID();
+        String fileName = uuid+"_"+file.getOriginalFilename();
+        File saveFile = new File(filePath, fileName); 
+        file.transferTo(saveFile);
+        board.setFilename(fileName);
+        board.setFilepath("/files/"+fileName);
+
+        boardRepository.save(board);
     }
 
     @Transactional

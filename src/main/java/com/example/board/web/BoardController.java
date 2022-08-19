@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.example.board.Service.BoardService;
 import com.example.board.domain.Board;
@@ -46,7 +49,7 @@ public class BoardController {
     }
 
     @PostMapping("/api/write")
-    public ResponseDto<?> writeBoard(@RequestBody Board board) {
+    public ResponseDto<?> writeBoard(MultipartHttpServletRequest board ) throws Exception{
         System.out.println("=================================");
         System.out.println(board);
         System.out.println("=================================");

@@ -14,6 +14,7 @@ class WriteBoardComponent extends Component {
       content: "",
       username: "",
       password: "",
+      file: ""
     };
 
     // 폼 양식에 값이 입력되면 this.state에 정의 된 변수의 값을 변경하도록 바인드
@@ -22,6 +23,7 @@ class WriteBoardComponent extends Component {
     this.changeContentHandler = this.changeContentHandler.bind(this);
     this.changeUsernameHandler = this.changeUsernameHandler.bind(this);
     this.changePasswordHandler = this.changePasswordHandler.bind(this);
+    this.changeFileHandler = this.changeFileHandler.bind(this);
     this.writeBoard = this.writeBoard.bind(this);
   }
 
@@ -42,13 +44,25 @@ class WriteBoardComponent extends Component {
     this.setState({ password: e.target.value });
   };
 
+  changeFileHandler = (e) => {
+    this.setState({ file: e.target.value });
+  };
+
   writeBoard = (e) => {
     e.preventDefault(); // 새로고침을 막아줌
+    const formData = new FormData();
+    formData.append("file", this.state.file);
+    formData.append("title", this.state.title);
+    formData.append("content", this.state.content);
+    formData.append("username", this.state.username);
+    formData.append("password", this.state.password);
+    console.log("formdata : : " + formData)
     let board = {
       title: this.state.title,
       content: this.state.content,
       username: this.state.username,
       password: this.state.password,
+      file: this.state.file
     };
     if (board.title === null || board.title === "") {
       return alert("title를 입력해주세요");
@@ -68,7 +82,7 @@ class WriteBoardComponent extends Component {
     console.log("board this.state.id=>" + this.state.id);
     if (this.state.id === "create") {
       console.log("board write=>" + JSON.stringify(board));
-      BoardService.writeBoard(board).then((res) => {
+      BoardService.writeBoard(formData).then((res) => {
         window.location.href = "/board";
       });
     } else {
@@ -127,6 +141,7 @@ class WriteBoardComponent extends Component {
           content: board.data.content,
           username: board.data.username,
           password: board.data.password,
+          file: board.data.file
         });
       });
     }
@@ -140,7 +155,7 @@ class WriteBoardComponent extends Component {
             <div className="card col-md-6 offset-md-3 offset-md-3">
               {this.getTitle()}
               <div className="card-body">
-                <form>
+                <form encType="multipart/fom-data">
                   <div className="form-group">
                     <label> Title </label>
                     <input
@@ -191,6 +206,15 @@ class WriteBoardComponent extends Component {
                       required
                     />
                   </div>
+                  <div className="form-group">
+                    <label>File</label>
+                    <input
+                      type="file"
+                      name="file"
+                      value={this.state.file || ""}
+                      onChange={this.changeFileHandler}
+                    />
+                  </div>
                   <button
                     type="submit"
                     className="btn btn-success"
@@ -210,8 +234,8 @@ class WriteBoardComponent extends Component {
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     );
   }
 }
