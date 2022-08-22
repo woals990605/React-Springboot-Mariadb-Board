@@ -48,14 +48,14 @@ public class BoardController {
         return boardService.search(keyword, p_num);
     }
 
-    @PostMapping("/api/write")
-    public ResponseDto<?> writeBoard(MultipartHttpServletRequest board ) throws Exception{
-        System.out.println("=================================");
-        System.out.println(board);
-        System.out.println("=================================");
-        boardService.write(board);
-        return new ResponseDto<>(1, "성공", null);
-    }
+    // @PostMapping("/api/write")
+    // public ResponseDto<?> writeBoard(MultipartHttpServletRequest board ) throws Exception{
+    //     System.out.println("=================================");
+    //     System.out.println(board);
+    //     System.out.println("=================================");
+    //     boardService.write(board);
+    //     return new ResponseDto<>(1, "성공", null);
+    // }
 
     @GetMapping("/api/detail/{id}")
     public ResponseDto<?> detail(@PathVariable Integer id) {

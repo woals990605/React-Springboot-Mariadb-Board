@@ -6,14 +6,15 @@ class ListBoardComponent extends Component {
     super(props);
     // 페이지에 표시될 글 목록데이터를 넣기위한 변수 board를 this.state에 선언
     // this.state에 선언한 변수의 값을 변경하기 위해서 setState를 사용해야함
-    let array = window.location.pathname.split("/") ?? null;
-    let = array[array.length - 1];
+    // let array = window.location.pathname.split("/") ?? null;
+    // let a = array[array.length - 1];
 
     this.state = {
       board: [],
       keyword: "",
       p_num: 1,
-      count: 0
+      count: 0,
+      slicePage: []
     };
     // 글 작성 버튼을 클릭 했을 때 동작하는 wirteBoard함수를 바인드
     this.writeBoard = this.writeBoard.bind(this);
@@ -52,7 +53,7 @@ class ListBoardComponent extends Component {
   }
 
   detailBoard(id) {
-    window.localStorage.setItem("p_num", this.state.p_num);
+    // window.localStorage.setItem("p_num", this.state.p_num);
 
     window.location.href = `/detail/${id}`;
     console.log("p : :: " + this.state.p_num);
@@ -60,12 +61,13 @@ class ListBoardComponent extends Component {
   }
 
   searchBoard(e) {
+    // console.log(e)
     this.setState({
       keyword: e.target.value,
     });
   }
 
-  clickBoard = () => {
+  clickBoard = (e) => {
     let param = {
       keyword: this.state.keyword,
       p_num: this.state.p_num
@@ -78,16 +80,16 @@ class ListBoardComponent extends Component {
     });
   };
 
-  listBoard(page) {
+  listBoard(page, keyword) {
 
     let param = {
-      keyword: this.state.keyword,
+      keyword: keyword,
       p_num: page
     };
     // console.log("pageNum1 : " + this.state.p_num);
     this.setState({ p_num: page });
     // console.log("pageNum 2: " + param.p_num);
-    BoardService.getSearch(param.keyword, page).then((res) => {
+    BoardService.getSearch(param.keyword, param.p_num).then((res) => {
       // console.log("tis ; page2 ==============::" + param.p_num);
       // console.log(res.data);
       // console.log("page page : " + param.p_num);
@@ -104,21 +106,40 @@ class ListBoardComponent extends Component {
     });
   }
 
-  viewPaging(page) {
+  viewPaging(page, keyword) {
     console.log("listBoard : : : " + this.state.count)
+    let pageCount = 5;
+    let totalPage = Math.ceil(this.state.count / 10);
+    let pageGroup = Math.ceil(page / pageCount);
+    let last = pageGroup * pageCount;
+    if (last > totalPage) {
+      last = totalPage;
+    }
+    if (totalPage < pageCount) {
+      pageCount = totalPage;
+    }
+    let first = last - (pageCount - 1);
     let pageNums = [];
-    // console.log("page1 : " + page)
-    for (let i = page; i <= Math.ceil(this.state.count / 10); i++) {
+    console.log("page1 : " + page)
+    for (let i = first; i <= last; i++) {
       // console.log("viewPaging : i " + i)
       // console.log("viewPaging : length " + pageNums.length)
       pageNums.push(i);
+      if (page < last) {
+        last = page;
+      }
     }
-    let p_slice = pageNums.slice(0, 5)
+    // console.log("viewPaging :  " + pageNums)
+    let p_slice = pageNums.slice(0, last)
+    // this.setState({
+    //   slicePage: p_slice
+    // })
+    // console.log("p_slice : : : " + p_slice)
 
     // console.log("pageNums : " + p_slice.length)
     return p_slice.map((page) => (
       <li className="page-item" key={page.toString()}>
-        <a className="page-link" onClick={() => this.listBoard(page)}>
+        <a className="page-link" onClick={() => this.listBoard(page, keyword)}>
           {page}
         </a>
       </li>
@@ -131,7 +152,7 @@ class ListBoardComponent extends Component {
       <li className="page-item">
         <a
           className="page-link"
-          onClick={() => this.listBoard(this.state.p_num - 1)}
+          onClick={() => this.listBoard(this.state.p_num === 1 ? this.state.p_num = 1 : this.state.p_num - 1, null)}
           tabIndex="-1"
         >
           &lt;
@@ -147,7 +168,7 @@ class ListBoardComponent extends Component {
       <li className="page-item">
         <a
           className="page-link"
-          onClick={() => this.listBoard(this.state.p_num === Math.ceil(this.state.count / 10) ? this.state.p_num + 0 : this.state.p_num + 1)}
+          onClick={() => this.listBoard(this.state.p_num === Math.ceil(this.state.count / 10) ? this.state.p_num + 0 : this.state.p_num + 1, null)}
           tabIndex="-1"
         >
           &gt;
@@ -164,7 +185,7 @@ class ListBoardComponent extends Component {
         <li className="page-item">
           <a
             className="page-link"
-            onClick={() => this.listBoard(1)}
+            onClick={() => this.listBoard(1, null)}
             tabIndex="-1"
           >
             &lt;&lt;
@@ -181,7 +202,7 @@ class ListBoardComponent extends Component {
         <li className="page-item">
           <a
             className="page-link"
-            onClick={() => this.listBoard(Math.ceil(this.state.count / 10))}
+            onClick={() => this.listBoard(Math.ceil(this.state.count / 10), null)}
             tabIndex="-1"
           >
             &gt;&gt;({Math.ceil(this.state.count / 10)})
@@ -203,7 +224,7 @@ class ListBoardComponent extends Component {
             placeholder="Search"
             onKeyPress={this.searchBoard}
             onChange={this.searchBoard}
-            value={this.state.keyword}
+            value={this.state.value}
           />
           <button
             className="btn btn-secondary btn-sm"
@@ -254,7 +275,7 @@ class ListBoardComponent extends Component {
             <ul className="pagination justify-content-center">
               {this.isMoveToFirstPage()}
               {this.isPagingPrev()}
-              {this.viewPaging(this.state.p_num)}
+              {this.viewPaging(this.state.p_num, this.state.keyword)}
               {this.isPagingNext()}
               {this.isMoveToLastPage()}
             </ul>
