@@ -32,7 +32,10 @@ class DetailBoardComponent extends Component {
   }
 
   goToList() {
-    window.location.href = "/board";
+
+    let p_num = window.sessionStorage.getItem("p_num");
+    console.log("storage : : : : " + p_num)
+    // window.location.href = `/search/${p_num}`;
   }
 
   goToUpdate = (e) => {

@@ -13,8 +13,7 @@ class ListBoardComponent extends Component {
       board: [],
       keyword: "",
       p_num: 1,
-      count: 0,
-      slicePage: []
+      count: 0
     };
     // 글 작성 버튼을 클릭 했을 때 동작하는 wirteBoard함수를 바인드
     this.writeBoard = this.writeBoard.bind(this);
@@ -40,11 +39,13 @@ class ListBoardComponent extends Component {
         count: res.data.allCount
       });
       console.log("listBoard : : : " + this.state.count)
+      // console.log("listBoard : : : " + this.state.p_num)
     });
 
     // BoardService.getSeach().then((res) => {
     //   this.setState({ keyword: res.data });
     // })
+    window.sessionStorage.removeItem("p_num");
   };
 
   // 글 작성 버튼을 클릭시 글작성 페이지로 이동하게 해주는 함수를 정의한것.
@@ -53,7 +54,8 @@ class ListBoardComponent extends Component {
   }
 
   detailBoard(id) {
-    // window.localStorage.setItem("p_num", this.state.p_num);
+
+    window.sessionStorage.setItem("p_num", this.state.p_num);
 
     window.location.href = `/detail/${id}`;
     console.log("p : :: " + this.state.p_num);
@@ -130,16 +132,16 @@ class ListBoardComponent extends Component {
       }
     }
     // console.log("viewPaging :  " + pageNums)
-    let p_slice = pageNums.slice(0, last)
+    // let p_slice = pageNums.slice(0, last)
     // this.setState({
     //   slicePage: p_slice
     // })
     // console.log("p_slice : : : " + p_slice)
 
     // console.log("pageNums : " + p_slice.length)
-    return p_slice.map((page) => (
+    return pageNums.map((page) => (
       <li className="page-item" key={page.toString()}>
-        <a className="page-link" onClick={() => this.listBoard(page, keyword)}>
+        <a className="page-link" onClick={() => this.listBoard(page, keyword)} style={this.state.p_num == page ? { color: '#4217b8', backgroundColor: '#337ab7' } : null}>
           {page}
         </a>
       </li>
@@ -211,6 +213,7 @@ class ListBoardComponent extends Component {
       );
     }
   }
+
   // render() 함수의 내용이 실제 웹페이지에 표시된다.
   // maps() 함수를 사용해서 boards의 데이터를 출력한다.
   render() {
@@ -275,7 +278,7 @@ class ListBoardComponent extends Component {
             <ul className="pagination justify-content-center">
               {this.isMoveToFirstPage()}
               {this.isPagingPrev()}
-              {this.viewPaging(this.state.p_num, this.state.keyword)}
+              {this.viewPaging(this.state.p_num)}
               {this.isPagingNext()}
               {this.isMoveToLastPage()}
             </ul>
