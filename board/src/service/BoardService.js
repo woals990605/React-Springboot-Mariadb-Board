@@ -20,7 +20,7 @@ class BoardService {
     return axios.get(BOARD_API_SEARCH_URL, {
       params: {
         keyword: keyword,
-        p_num: p_num
+        p_num: p_num,
       },
     });
   }

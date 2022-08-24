@@ -32,10 +32,17 @@ class DetailBoardComponent extends Component {
   }
 
   goToList() {
-
-    let p_num = window.sessionStorage.getItem("p_num");
-    console.log("storage : : : : " + p_num)
-    // window.location.href = `/search/${p_num}`;
+    let keyword = "";
+    let p_num = JSON.parse(window.sessionStorage.getItem("p_num"));
+    console.log("goToList p_num : " + p_num);
+    console.log("goToList keyword : " + keyword);
+    BoardService.getSearch(keyword, p_num).then((res) => {
+      this.setState({
+        board: res.data.boardList,
+        count: res.data.allCount,
+      });
+    });
+    window.location.href = `/board/${p_num}`;
   }
 
   goToUpdate = (e) => {

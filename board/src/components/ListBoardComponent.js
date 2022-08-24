@@ -13,7 +13,7 @@ class ListBoardComponent extends Component {
       board: [],
       keyword: "",
       p_num: 1,
-      count: 0
+      count: 0,
     };
     // 글 작성 버튼을 클릭 했을 때 동작하는 wirteBoard함수를 바인드
     this.writeBoard = this.writeBoard.bind(this);
@@ -26,7 +26,7 @@ class ListBoardComponent extends Component {
 
     let param = {
       keyword: this.state.keyword,
-      p_num: this.state.p_num
+      p_num: this.state.p_num,
     };
     // console.log("count : : : : " + this.state.count)
     // console.log("first param keyword : :" + param.keyword)
@@ -36,9 +36,9 @@ class ListBoardComponent extends Component {
       this.setState({
         board: res.data.boardList,
         p_num: this.state.p_num,
-        count: res.data.allCount
+        count: res.data.allCount,
       });
-      console.log("listBoard : : : " + this.state.count)
+      console.log("listBoard : : : " + this.state.count);
       // console.log("listBoard : : : " + this.state.p_num)
     });
 
@@ -54,12 +54,10 @@ class ListBoardComponent extends Component {
   }
 
   detailBoard(id) {
-
-    window.sessionStorage.setItem("p_num", this.state.p_num);
+    window.sessionStorage.setItem("p_num", JSON.stringify(this.state.p_num));
 
     window.location.href = `/detail/${id}`;
     console.log("p : :: " + this.state.p_num);
-
   }
 
   searchBoard(e) {
@@ -72,21 +70,20 @@ class ListBoardComponent extends Component {
   clickBoard = (e) => {
     let param = {
       keyword: this.state.keyword,
-      p_num: this.state.p_num
+      p_num: this.state.p_num,
     };
     BoardService.getSearch(param.keyword, param.p_num).then((res) => {
       this.setState({
         board: res.data.boardList,
-        count: res.data.allCount
+        count: res.data.allCount,
       });
     });
   };
 
   listBoard(page, keyword) {
-
     let param = {
       keyword: keyword,
-      p_num: page
+      p_num: page,
     };
     // console.log("pageNum1 : " + this.state.p_num);
     this.setState({ p_num: page });
@@ -97,19 +94,19 @@ class ListBoardComponent extends Component {
       // console.log("page page : " + param.p_num);
       this.setState({
         board: res.data.boardList,
-        count: res.data.allCount
+        count: res.data.allCount,
       });
       if (this.state.p_num === 0) {
         this.setState({
-          p_num: 1
-        })
+          p_num: 1,
+        });
       }
       // console.log(": : : ::: :param.p :" + param.p_num)
     });
   }
 
   viewPaging(page, keyword) {
-    console.log("listBoard : : : " + this.state.count)
+    console.log("listBoard : : : " + this.state.count);
     let pageCount = 5;
     let totalPage = Math.ceil(this.state.count / 10);
     let pageGroup = Math.ceil(page / pageCount);
@@ -122,7 +119,7 @@ class ListBoardComponent extends Component {
     }
     let first = last - (pageCount - 1);
     let pageNums = [];
-    console.log("page1 : " + page)
+    console.log("page1 : " + page);
     for (let i = first; i <= last; i++) {
       // console.log("viewPaging : i " + i)
       // console.log("viewPaging : length " + pageNums.length)
@@ -141,7 +138,15 @@ class ListBoardComponent extends Component {
     // console.log("pageNums : " + p_slice.length)
     return pageNums.map((page) => (
       <li className="page-item" key={page.toString()}>
-        <a className="page-link" onClick={() => this.listBoard(page, keyword)} style={this.state.p_num == page ? { color: '#4217b8', backgroundColor: '#337ab7' } : null}>
+        <a
+          className="page-link"
+          onClick={() => this.listBoard(page, keyword)}
+          style={
+            this.state.p_num == page
+              ? { color: "#4217b8", backgroundColor: "#337ab7" }
+              : null
+          }
+        >
           {page}
         </a>
       </li>
@@ -154,14 +159,20 @@ class ListBoardComponent extends Component {
       <li className="page-item">
         <a
           className="page-link"
-          onClick={() => this.listBoard(this.state.p_num === 1 ? this.state.p_num = 1 : this.state.p_num - 1, null)}
+          onClick={() =>
+            this.listBoard(
+              this.state.p_num === 1
+                ? (this.state.p_num = 1)
+                : this.state.p_num - 1,
+              null
+            )
+          }
           tabIndex="-1"
         >
           &lt;
         </a>
       </li>
     );
-
   }
 
   isPagingNext() {
@@ -170,14 +181,20 @@ class ListBoardComponent extends Component {
       <li className="page-item">
         <a
           className="page-link"
-          onClick={() => this.listBoard(this.state.p_num === Math.ceil(this.state.count / 10) ? this.state.p_num + 0 : this.state.p_num + 1, null)}
+          onClick={() =>
+            this.listBoard(
+              this.state.p_num === Math.ceil(this.state.count / 10)
+                ? this.state.p_num + 0
+                : this.state.p_num + 1,
+              null
+            )
+          }
           tabIndex="-1"
         >
           &gt;
         </a>
       </li>
     );
-
   }
 
   isMoveToFirstPage() {
@@ -204,7 +221,9 @@ class ListBoardComponent extends Component {
         <li className="page-item">
           <a
             className="page-link"
-            onClick={() => this.listBoard(Math.ceil(this.state.count / 10), null)}
+            onClick={() =>
+              this.listBoard(Math.ceil(this.state.count / 10), null)
+            }
             tabIndex="-1"
           >
             &gt;&gt;({Math.ceil(this.state.count / 10)})
@@ -261,7 +280,10 @@ class ListBoardComponent extends Component {
             <tbody>
               {this.state.board.map((board, index) => (
                 <tr key={board.id}>
-                  <td>{(Math.ceil(this.state.count - index)) - (this.state.p_num - 1) * 10}</td>
+                  <td>
+                    {Math.ceil(this.state.count - index) -
+                      (this.state.p_num - 1) * 10}
+                  </td>
                   <td onClick={() => this.detailBoard(board.id)}>
                     {board.title}
                   </td>
