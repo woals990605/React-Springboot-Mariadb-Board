@@ -120,7 +120,9 @@ class ListBoardComponent extends Component {
     console.log("viewpaging :: " + param.p_num);
     let pageCount = 5;
     let totalPage = Math.ceil(this.state.count / 10);
+    console.log("totalPage : : " + totalPage)
     let pageGroup = Math.ceil(param.p_num / pageCount);
+    console.log("pageGroup : : " + pageGroup)
     let last = pageGroup * pageCount;
     if (last > totalPage) {
       last = totalPage;
@@ -132,7 +134,7 @@ class ListBoardComponent extends Component {
     let pageNums = [];
     for (let i = first; i <= last; i++) {
       pageNums.push(i);
-      if (param.p_num < last) {
+      if (param.p_num > last) {
         last = p_num;
       }
     }
@@ -153,6 +155,8 @@ class ListBoardComponent extends Component {
       </li>
     ));
   }
+
+
 
   isPagingPrev() {
     // < 앞페이지
