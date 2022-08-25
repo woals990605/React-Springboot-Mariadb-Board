@@ -23,29 +23,35 @@ class ListBoardComponent extends Component {
   // 리액트의 생명주기 메소드인 'componentDidMount'에서 'BoardService'의 메소드를 호출해서 데이터를 가져온다.
   componentDidMount = () => {
     // window.localStorage.removeItem("p_num");
+    let p_num = JSON.parse(window.sessionStorage.getItem("p_num"));
+    console.log("p_num: : " + p_num);
+    console.log("this.state.p_num: : " + this.state.p_num)
+    let param = {};
+    if (p_num === null) {
+      param = {
+        keyword: this.state.keyword,
+        p_num: this.state.p_num,
+      };
+    } else {
+      param = {
+        keyword: this.state.keyword,
+        p_num: p_num,
+      };
+    }
 
-    let param = {
-      keyword: this.state.keyword,
-      p_num: this.state.p_num,
-    };
-    // console.log("count : : : : " + this.state.count)
-    // console.log("first param keyword : :" + param.keyword)
-    // console.log("first param p_num : :" + param.p_num)
     BoardService.getSearch(param.keyword, param.p_num).then((res) => {
-      // console.log("res res " + JSON.stringify(res))
       this.setState({
         board: res.data.boardList,
-        p_num: this.state.p_num,
+        p_num: param.p_num,
         count: res.data.allCount,
       });
-      console.log("listBoard : : : " + this.state.count);
-      // console.log("listBoard : : : " + this.state.p_num)
+
     });
 
     // BoardService.getSeach().then((res) => {
     //   this.setState({ keyword: res.data });
     // })
-    window.sessionStorage.removeItem("p_num");
+
   };
 
   // 글 작성 버튼을 클릭시 글작성 페이지로 이동하게 해주는 함수를 정의한것.
@@ -57,11 +63,9 @@ class ListBoardComponent extends Component {
     window.sessionStorage.setItem("p_num", JSON.stringify(this.state.p_num));
 
     window.location.href = `/detail/${id}`;
-    console.log("p : :: " + this.state.p_num);
   }
 
   searchBoard(e) {
-    // console.log(e)
     this.setState({
       keyword: e.target.value,
     });
@@ -80,18 +84,13 @@ class ListBoardComponent extends Component {
     });
   };
 
-  listBoard(page, keyword) {
+  listBoard(p_num, keyword) {
     let param = {
       keyword: keyword,
-      p_num: page,
+      p_num: p_num,
     };
-    // console.log("pageNum1 : " + this.state.p_num);
-    this.setState({ p_num: page });
-    // console.log("pageNum 2: " + param.p_num);
+    this.setState({ p_num: p_num });
     BoardService.getSearch(param.keyword, param.p_num).then((res) => {
-      // console.log("tis ; page2 ==============::" + param.p_num);
-      // console.log(res.data);
-      // console.log("page page : " + param.p_num);
       this.setState({
         board: res.data.boardList,
         count: res.data.allCount,
@@ -101,15 +100,27 @@ class ListBoardComponent extends Component {
           p_num: 1,
         });
       }
-      // console.log(": : : ::: :param.p :" + param.p_num)
     });
+    window.sessionStorage.removeItem("p_num");
   }
 
-  viewPaging(page, keyword) {
-    console.log("listBoard : : : " + this.state.count);
+  viewPaging(p_num, keyword) {
+    let param = {};
+    if (p_num === null) {
+      param = {
+        keyword: this.state.keyword,
+        p_num: this.state.p_num,
+      };
+    } else {
+      param = {
+        keyword: this.state.keyword,
+        p_num: p_num,
+      };
+    }
+    console.log("viewpaging :: " + param.p_num);
     let pageCount = 5;
     let totalPage = Math.ceil(this.state.count / 10);
-    let pageGroup = Math.ceil(page / pageCount);
+    let pageGroup = Math.ceil(param.p_num / pageCount);
     let last = pageGroup * pageCount;
     if (last > totalPage) {
       last = totalPage;
@@ -119,35 +130,25 @@ class ListBoardComponent extends Component {
     }
     let first = last - (pageCount - 1);
     let pageNums = [];
-    console.log("page1 : " + page);
     for (let i = first; i <= last; i++) {
-      // console.log("viewPaging : i " + i)
-      // console.log("viewPaging : length " + pageNums.length)
       pageNums.push(i);
-      if (page < last) {
-        last = page;
+      if (param.p_num < last) {
+        last = p_num;
       }
     }
-    // console.log("viewPaging :  " + pageNums)
-    // let p_slice = pageNums.slice(0, last)
-    // this.setState({
-    //   slicePage: p_slice
-    // })
-    // console.log("p_slice : : : " + p_slice)
 
-    // console.log("pageNums : " + p_slice.length)
-    return pageNums.map((page) => (
-      <li className="page-item" key={page.toString()}>
+    return pageNums.map((p_num) => (
+      <li className="page-item" key={p_num.toString()}>
         <a
           className="page-link"
-          onClick={() => this.listBoard(page, keyword)}
+          onClick={() => this.listBoard(p_num, keyword)}
           style={
-            this.state.p_num == page
+            this.state.p_num == p_num
               ? { color: "#4217b8", backgroundColor: "#337ab7" }
               : null
           }
         >
-          {page}
+          {p_num}
         </a>
       </li>
     ));

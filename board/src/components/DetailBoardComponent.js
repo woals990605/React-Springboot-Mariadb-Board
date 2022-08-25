@@ -4,23 +4,20 @@ import BoardService from "../service/BoardService";
 class DetailBoardComponent extends Component {
   constructor(props) {
     super(props);
-    // console.log("detail props::::")
     let array = window.location.pathname.split("/") ?? null;
     let id = array[array.length - 1];
-    console.log("detail props::::" + id);
     this.state = {
       board: {},
       id: id,
+      p_num: 1
     };
     this.goToUpdate = this.goToUpdate.bind(this);
   }
 
   componentDidMount = () => {
-    console.log("detailboard.compentDidMount.id" + this.state.id);
     BoardService.detailBoard(this.state.id).then((res) => {
       this.setState({ board: res.data });
     });
-    console.log("detailboard2.compentDidMount.id ===>" + this.state.id);
   };
 
   returnDate(cTime) {
@@ -32,7 +29,7 @@ class DetailBoardComponent extends Component {
   }
 
   goToList() {
-    let keyword = "";
+    let keyword = "안";
     let p_num = JSON.parse(window.sessionStorage.getItem("p_num"));
     console.log("goToList p_num : " + p_num);
     console.log("goToList keyword : " + keyword);
@@ -42,7 +39,8 @@ class DetailBoardComponent extends Component {
         count: res.data.allCount,
       });
     });
-    window.location.href = `/board/${p_num}`;
+    console.log("goToList p_num2 : " + p_num);
+    window.location.href = "/board/" + `${p_num}`;
   }
 
   goToUpdate = (e) => {

@@ -41,13 +41,14 @@ public class BoardController {
     public Map searchBoard(@RequestParam(required = false) String keyword,
             @RequestParam(value = "p_num") Integer p_num) {
         System.out.println("=================================");
+        System.out.println("p_num" + p_num);
         if (keyword == null) {
             keyword = "";
         }
         if (p_num == null || p_num <= 0)
             p_num = 1;
         System.out.println("키원드: : : : :" + keyword + " dsalkfjalskdjlk");
-        System.out.println(p_num);
+        System.out.println("p_num2" + p_num);
         System.out.println("=================================");
         return boardService.search(keyword, p_num);
     }
